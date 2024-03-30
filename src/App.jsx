@@ -103,7 +103,7 @@ function App() {
     setdescription("");
     //setteam("");
     setassignee("");
-    setpriority("");
+    setpriority("P0");
     setstatus("pending");
     settoggle(false);
     setedit(false);
@@ -129,7 +129,7 @@ function App() {
     setdescription("");
     //setteam("");
     setassignee("");
-    setpriority("");
+    setpriority("P0");
     setstatus("pending");
     settoggle(false);
   };
