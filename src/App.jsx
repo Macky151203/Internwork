@@ -3,20 +3,9 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 
 function App() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  // const [filter, setfilter] = useState(false);
-  const [filterpri, setfilterpri] = useState("none");
-  // const [sort, setsort] = useState(false);
-  const [sortval, setsortval] = useState("");
+  const [filterpri, setfilterpri] = useState("none"); //to set the filter priority value
   const [data, setdata] = useState([]);
-  const [edit, setedit] = useState(false);
+  const [edit, setedit] = useState(false); //to toogle the edit state
   const [id, setid] = useState(0);
   const [pending, setpending] = useState([]);
   const [inprogress, setinprogress] = useState([]);
@@ -25,20 +14,19 @@ function App() {
   const [deffered, setdeffered] = useState([]);
   const [title, settitle] = useState("");
   const [description, setdescription] = useState("");
-  // const [team, setteam] = useState("");
   const [assignee, setassignee] = useState("");
   const [priority, setpriority] = useState("P0");
   const [status, setstatus] = useState("pending");
 
-  const [toggle, settoggle] = useState(false);
+  const [toggle, settoggle] = useState(false); //to toggle between the add new task pop up component
   useEffect(() => {
     var storeddata = JSON.parse(localStorage.getItem("userdata"));
     if (filterpri !== "none") {
       const newdata = storeddata.filter((item) => item.priority === filterpri);
       storeddata = newdata;
     }
+    //to store data based on status
     if (storeddata) {
-      // console.log(storeddata);
       const pendingdata = storeddata.filter(
         (item) => item.status === "pending"
       );
@@ -55,7 +43,6 @@ function App() {
       const deffereddata = storeddata.filter(
         (item) => item.status === "deffered"
       );
-      // console.log(pendingdata);
       setpending(pendingdata);
       setinprogress(inprogressdata);
       setcompleted(completeddata);
@@ -64,21 +51,7 @@ function App() {
       setdata(storeddata);
     }
   }, [data]);
-
-  // const sortbypri=()=>{
-  //   const newdata=[]
-  // }
-
-  // const filter = () => {
-  //   console.log("data");
-  //   console.log(data);
-  //   console.log(priority);
-  //   const newdata = data.filter((item) => item.priority === priority);
-  //   console.log("filtered data");
-  //   console.log(newdata);
-  //   setdata(newdata)
-
-  // };
+  //to set the selected task values to input field to edit it
   const setval = (item) => {
     setid(item.id);
     settitle(item.title);
@@ -87,9 +60,8 @@ function App() {
     setpriority(item.priority);
     setstatus(item.status);
   };
-
+  //to update item priority and status
   const Update = () => {
-    // const storeddata = JSON.parse(localStorage.getItem("userdata"));
     const newdata = data.map((item) => {
       if (item.id === id) {
         return { ...item, priority: priority, status: status };
@@ -101,7 +73,6 @@ function App() {
     localStorage.setItem("userdata", JSON.stringify(newdata));
     settitle("");
     setdescription("");
-    //setteam("");
     setassignee("");
     setpriority("P0");
     setstatus("pending");
@@ -120,14 +91,9 @@ function App() {
     };
     const newdata = [...data, newobj];
     setdata(newdata);
-    // if (newobj.priority === "pending") {
-    //   const newpdata = [...pending, newobj];
-    //   setpending(newpdata);
-    // }
     localStorage.setItem("userdata", JSON.stringify(newdata));
     settitle("");
     setdescription("");
-    //setteam("");
     setassignee("");
     setpriority("P0");
     setstatus("pending");
@@ -141,21 +107,21 @@ function App() {
   };
 
   return (
+    //the pop up components to add task
     <div
       className={`overflow-x-hidden ${
         toggle ? "" : ""
-      } bg-gradient-to-r from-indigo-300 to-purple-400 min-h-screen`} //correct
+      } bg-gradient-to-r from-indigo-300 to-purple-400 min-h-screen`}
     >
-      {/* <div className="bg-green-200 absolute w-1/2 mt-10  h-1/2 "></div> */}
       <div
         className={`absolute w-full h-screen flex ${
           toggle ? "" : "hidden"
         } justify-center pt-24 z-10`}
       >
-        <div className="bg-gradient-to-r border-2  from-indigo-300 to-purple-400 md:w-1/4 w-full h-fit rounded-xl">
+        <div className="bg-gradient-to-r border-2 m-2  from-indigo-300 to-purple-400 md:w-1/4 w-full h-fit rounded-xl">
           <div className="bg-white flex flex-row items-center justify-between px-2 h-12 mb-2 rounded-t-xl">
             <div className="font-semibold text-xl">Create a Task</div>
-            {/* make sure to correct */}
+
             <div
               className="cursor-pointer font-bold"
               onClick={() => {
@@ -261,9 +227,8 @@ function App() {
       {/* Navbar */}
       <div className="= p-1  text-center bg-gradient-to-r from-indigo-300 to-purple-400 h-10">
         <h1 className="font-bold text-2xl">InternAssignment</h1>
-        <div></div>
       </div>
-
+      {/* main component */}
       <div
         className={`mt-8 p-4 h-full flex flex-col  justify-center border-2 border-white rounded-lg mx-4 gap-4 ${
           toggle ? "opacity-20" : ""
@@ -276,10 +241,8 @@ function App() {
               name="priority"
               className="mx-1 p-1"
               defaultValue="none"
-              // value={priority}
               onChange={(e) => {
                 setfilterpri(e.target.value);
-                // setfilter(true);
               }}
             >
               <option value="none">None</option>
@@ -299,7 +262,7 @@ function App() {
             </button>
           </div>
         </div>
-
+          {/* to display all items based on their status */}
         <div className="flex md:flex-row flex-col gap-4">
           <div className="bg-white flex flex-col  md:w-1/5 h-96 rounded-lg">
             <div className="bg-gray-400 rounded-t-lg p-2 text-white font-semibold">
@@ -436,14 +399,6 @@ function App() {
                           @{item.assignee}
                         </h1>
                         <div className="w-fit flex gap-1 h-fit text-white font-semibold  px-1">
-                          {/* <button
-                          onClick={() => {
-                            Delete(item.id);
-                          }}
-                          className="bg-red-500 text-white p-1 rounded-md"
-                        >
-                          Delete
-                        </button> */}
                           <button
                             onClick={() => {
                               setedit(true);
